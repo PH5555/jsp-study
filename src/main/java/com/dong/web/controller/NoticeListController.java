@@ -23,8 +23,30 @@ import com.dong.web.service.NoticeService;
 public class NoticeListController extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		String field = "title";
+		String query = "";
+		int page = 1;
+		
+		String field_ = request.getParameter("f");
+		String query_ = request.getParameter("q");
+		String page_ = request.getParameter("p");
+		
+		if(field_ != null && !field_.equals("")) {
+			field = field_;
+		}
+		if(query_ != null && !query_.equals("")) {
+			query = query_;
+		}
+		if(page_ != null) {
+			page= Integer.parseInt(page_);
+		}
+		
 		NoticeService noticeService = new NoticeService();
-		request.setAttribute("list", noticeService.getNoticeList());
+		request.setAttribute("list", noticeService.getNoticeList(page, field, query));
+		request.setAttribute("count", noticeService.getNoticeCount(field, query));
+		
+		System.out.print(noticeService.getNoticeCount(field, query));
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/notice/list.jsp");
 		dispatcher.forward(request, response);

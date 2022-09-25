@@ -4,6 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
    
 <!DOCTYPE html>
 <html>
@@ -181,7 +182,7 @@
 					<c:forEach var="n" items="${list}">	
 					<tr>
 						<td>${n.id}</td>
-						<td class="title indent text-align-left"><a href="detail?id=${n.id}">${n.title}</a></td>
+						<td class="title indent text-align-left"><a href="detail?id=${n.id}">${n.title}</a><span>[${n.commentCnt}]</span></td>
 						<td>newlec</td>
 						<td>
 							2019-08-18		
@@ -193,10 +194,12 @@
 					</tbody>
 				</table>
 			</div>
+			<c:set var="lastNum" value="${ count }"/>
+			<fmt:parseNumber var="pages" integerOnly="true" value="${ (count / 5)+(1-((count / 5) % 1)%1) }"/>
 			
 			<div class="indexer margin-top align-right">
 				<h3 class="hidden">현재 페이지</h3>
-				<div><span class="text-orange text-strong">1</span> / 1 pages</div>
+				<div><span class="text-orange text-strong">${empty (param.p) ? 1 : param.p}</span> / ${pages} pages</div>
 			</div>
 
 			<div class="margin-top align-center pager">	
@@ -204,7 +207,7 @@
 	<div>
 	<c:set var="page" value="${(param.p == null) ? 1:param.p}"/>
 		<c:set var="startNum" value="${page-(page-1)%5}"/>
-		<c:set var="lastNum" value="23"/>
+		
 		
 		<c:if test="${ startNum-5 >= 1}">
 		<a class="btn btn-prev" href="?p=${startNum-1}&t=&q=">이전</a>
@@ -219,7 +222,8 @@
 	<ul class="-list- center">
 		
 		<c:forEach var="i" begin="0" end="4">
-			<li><a class="-text- orange bold" href="?p=${startNum+i}&t=&q=" >${startNum+i}</a></li>
+			<li><a class="-text- ${ (empty param.p ? 1 : param.p) == startNum + i ? 'orange' : ''} bold" href="?p=${startNum+i}&t=&q=" >${startNum+i}</a></li>
+			
 		</c:forEach>
 	</ul>
 	<div>

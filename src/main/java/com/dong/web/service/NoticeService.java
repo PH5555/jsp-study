@@ -10,30 +10,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dong.web.entity.Notice;
+import com.dong.web.entity.NoticeView;
 
 public class NoticeService {
-	public List<Notice> getNoticeList(){
+	public List<NoticeView> getNoticeList(){
 		return getNoticeList(1, "title", "");
 	}
 	
-	public List<Notice> getNoticeList(int page){
+	public List<NoticeView> getNoticeList(int page){
 		return getNoticeList(page, "title", "");
 	}
 	
-	public List<Notice> getNoticeList(int page, String field, String query){
-		List<Notice> list = new ArrayList();
+	public List<NoticeView> getNoticeList(int page, String field, String query){
+		List<NoticeView> list = new ArrayList();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://"
 					+ "localhost:3306/ex", "root","djib1213ppoo");
 			String sql = "SELECT Q.* FROM (SELECT @ROWNUM := @ROWNUM + 1 AS ROWNUM, "
-					+ "N.* FROM (SELECT @ROWNUM := 0) R, (SELECT * FROM NOTICE WHERE ? like '" + query + "%') N) Q "
+					+ "N.* FROM (SELECT @ROWNUM := 0) R, (SELECT * FROM NOTICE_VIEW WHERE " + field + " like '" + query + "%') N) Q "
 					+ "WHERE ROWNUM BETWEEN ? AND ?;";
+			
+			System.out.print(sql);
 		
 			PreparedStatement stmt = con.prepareStatement(sql); 
-			stmt.setString(1, field);
-			stmt.setInt(2, 5 * page - 4);
-			stmt.setInt(3, 5 * page);
+			
+			stmt.setInt(1, 5 * page - 4);
+			stmt.setInt(2, 5 * page);
 			
 			ResultSet rs = stmt.executeQuery(); 
 			
@@ -42,8 +45,9 @@ public class NoticeService {
 				String title = rs.getString("title");
 				String content = rs.getString("content");
 				String file = rs.getString("file");
+				int cnt = rs.getInt("cnt");
 			
-				Notice notice = new Notice(id, title, content, file);
+				NoticeView notice = new NoticeView(id, title, content, file, cnt);
 			
 				list.add(notice);
 			}
@@ -71,14 +75,13 @@ public class NoticeService {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://"
 					+ "localhost:3306/ex", "root","djib1213ppoo");
-			String sql = "SELECT COUNT(*) as cnt FROM (SELECT * FROM NOTICE WHERE ? like '" + query + "%') N;";
+			String sql = "SELECT COUNT(*) as cnt FROM (SELECT * FROM NOTICE WHERE " + field + " like '" + query + "%') N;";
 			
-			PreparedStatement stmt = con.prepareStatement(sql);
-			stmt.setString(1, field);
-			ResultSet rs = stmt.executeQuery();  
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);  
 			rs.next();
 			
-			count = rs.getInt("count");
+			count = rs.getInt("cnt");
 			
 		    rs.close();
 			stmt.close();

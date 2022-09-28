@@ -1,4 +1,4 @@
-package com.dong.web.controller;
+package com.dong.web.controller.admin.notice;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -19,8 +19,26 @@ import javax.servlet.http.HttpServletResponse;
 import com.dong.web.entity.Notice;
 import com.dong.web.service.NoticeService;
 
-@WebServlet("/notice/list")
-public class NoticeListController extends HttpServlet{
+@WebServlet("/admin/notice/list")
+public class ListController extends HttpServlet{
+	
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String[] deleteIds = request.getParameterValues("del");
+		String[] openIds = request.getParameterValues("open");
+	    String cmd = request.getParameter("cmd");
+	    
+	    if(cmd.equals("일괄공개")) {
+	    	
+	    }
+	    else if(cmd.equals("일괄삭제")) {
+	    	NoticeService service = new NoticeService();
+	    	service.deleteNoticeAll(deleteIds);
+	    }
+		
+		response.sendRedirect("list");
+	}
+	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -46,9 +64,7 @@ public class NoticeListController extends HttpServlet{
 		request.setAttribute("list", noticeService.getNoticeList(page, field, query));
 		request.setAttribute("count", noticeService.getNoticeCount(field, query));
 		
-		System.out.print(noticeService.getNoticeCount(field, query));
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/notice/list.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/view/admin/board/notice/list.jsp");
 		dispatcher.forward(request, response);
 		 
 	}

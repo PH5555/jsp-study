@@ -13,8 +13,8 @@ public class NoticeView extends Notice {
 		this.commentCnt = commentCnt;
 	}
 
-	public NoticeView(int id, String title, String content, String file, int commentCnt) {
-		super(id, title, content, file);
+	public NoticeView(int id, String title, String content, String file, int pub ,int commentCnt) {
+		super(id, title, content, file, pub);
 		this.commentCnt = commentCnt;
 	}
 

@@ -5,6 +5,7 @@ public class Notice {
 	private String title;
 	private String content;
 	private String file;
+	private int pub;
 	
 	public String getTitle() {
 		return title;
@@ -39,12 +40,24 @@ public class Notice {
 		this.file = file;
 	}
 
-	public Notice(int id, String title, String content, String file) {
-		super();
+	public int getPub() {
+		return pub;
+	}
+
+	public void setPub(int pub) {
+		this.pub = pub;
+	}
+	
+	public Notice() {
+		
+	}
+
+	public Notice(int id, String title, String content, String file, int pub) {
 		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.file = file;
+		this.pub = pub;
 	}
 	
 }

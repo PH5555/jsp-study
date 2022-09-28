@@ -13,6 +13,82 @@ import com.dong.web.entity.Notice;
 import com.dong.web.entity.NoticeView;
 
 public class NoticeService {
+	
+	public int removeNoticeAll(int[] ids) {
+		return 0;
+	}
+	
+	public int pubNoticeAll(int[] ids) {
+		return 0;
+	}
+	
+	public int insertNotice(Notice notice) {
+		int result = 0;
+	
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://"
+					+ "localhost:3306/ex", "root","djib1213ppoo");
+			String sql = "INSERT INTO `ex`.`NOTICE` (`title`, `content`, `pub`) VALUES ('"+notice.getTitle()+"', '"+notice.getContent()+"', '"+notice.getPub()+"');";
+			
+			Statement stmt = con.createStatement();
+			result = stmt.executeUpdate(sql); 
+			
+			stmt.close();
+			con.close(); 
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public int deleteNoticeAll(String[] deleteIds) {
+		int result = 0;
+		String query = "";
+		
+		for(int i = 0; i < deleteIds.length; i++) {
+			query += deleteIds[i];
+			if(i != deleteIds.length - 1) query += ",";
+		}
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://"
+					+ "localhost:3306/ex", "root","djib1213ppoo");
+			String sql = "DELETE FROM NOTICE WHERE ID IN (" + query + ");";
+			
+			Statement stmt = con.createStatement(); 
+			result = stmt.executeUpdate(sql); 
+			
+			stmt.close();
+			con.close(); 
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public int deleteNotice(int id) {
+		return 0;
+	}
+	
+	public int updateNotice(Notice notice) {
+		return 0;
+	}
+	
+	public List<Notice> getNoticeNewestList(){
+		return null;
+	}
+	
+	
 	public List<NoticeView> getNoticeList(){
 		return getNoticeList(1, "title", "");
 	}
@@ -31,8 +107,6 @@ public class NoticeService {
 					+ "N.* FROM (SELECT @ROWNUM := 0) R, (SELECT * FROM NOTICE_VIEW WHERE " + field + " like '" + query + "%') N) Q "
 					+ "WHERE ROWNUM BETWEEN ? AND ?;";
 			
-			System.out.print(sql);
-		
 			PreparedStatement stmt = con.prepareStatement(sql); 
 			
 			stmt.setInt(1, 5 * page - 4);
@@ -45,9 +119,10 @@ public class NoticeService {
 				String title = rs.getString("title");
 				String content = rs.getString("content");
 				String file = rs.getString("file");
+				int pub = rs.getInt("pub");
 				int cnt = rs.getInt("cnt");
 			
-				NoticeView notice = new NoticeView(id, title, content, file, cnt);
+				NoticeView notice = new NoticeView(id, title, content, file, pub, cnt);
 			
 				list.add(notice);
 			}
@@ -113,8 +188,9 @@ public class NoticeService {
 			String title = rs.getString("title");
 			String content = rs.getString("content");
 			String file = rs.getString("file");
+			int pub = rs.getInt("pub");
 			
-			notice = new Notice(id, title, content, file);
+			notice = new Notice(id, title, content, file, pub);
 		
 		    rs.close();
 			stmt.close();
@@ -145,8 +221,9 @@ public class NoticeService {
 			String title = rs.getString("title");
 			String content = rs.getString("content");
 			String file = rs.getString("file");
+			int pub = rs.getInt("pub");
 			
-			notice = new Notice(id, title, content, file);
+			notice = new Notice(id, title, content, file, pub);
 		
 		    rs.close();
 			stmt.close();
@@ -177,8 +254,9 @@ public class NoticeService {
 			String title = rs.getString("title");
 			String content = rs.getString("content");
 			String file = rs.getString("file");
+			int pub = rs.getInt("pub");
 			
-			notice = new Notice(id, title, content, file);
+			notice = new Notice(id, title, content, file, pub);
 		
 		    rs.close();
 			stmt.close();

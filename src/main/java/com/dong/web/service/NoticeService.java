@@ -29,7 +29,7 @@ public class NoticeService {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://"
 					+ "localhost:3306/ex", "root","djib1213ppoo");
-			String sql = "INSERT INTO `ex`.`NOTICE` (`title`, `content`, `pub`) VALUES ('"+notice.getTitle()+"', '"+notice.getContent()+"', '"+notice.getPub()+"');";
+			String sql = "INSERT INTO `ex`.`NOTICE` (`title`, `content`, `pub`, `file`) VALUES ('"+notice.getTitle()+"', '"+notice.getContent()+"', '"+notice.getPub()+"', '"+notice.getFile()+"');";
 			
 			Statement stmt = con.createStatement();
 			result = stmt.executeUpdate(sql); 

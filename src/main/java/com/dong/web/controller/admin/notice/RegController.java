@@ -50,7 +50,6 @@ public class RegController extends HttpServlet{
 		fos.close();
 		
 		int open = 0;
-		
 		if(open_ != null) open = 1;
 	
 		Notice notice = new Notice();
@@ -58,6 +57,7 @@ public class RegController extends HttpServlet{
 		notice.setTitle(title);
 		notice.setContent(content);
 		notice.setPub(open);
+		notice.setFile(fileName);
 		NoticeService service = new NoticeService();
 		service.insertNotice(notice);
 		
